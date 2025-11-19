@@ -20,13 +20,7 @@ namespace PropertiesManager
             set => NukeConfig.Value = value;
         }
         void Awake() => NukeConfig = Config.Bind(NukeSetting, false, new ConfigDescription($"Should PropertiesManager disable properties all together?"));
-        void OnEnable() => HarmonyPatches.ApplyHarmonyPatches();
-        void OnDisable() => HarmonyPatches.RemoveHarmonyPatches();
-    }
-    public class PropertiesCommandManager : ICommandRegistrar
-    {
-        public void Initialize() {}
-        public void RegisterCommands()
+        void Start()
         {
             var commandHandler = CommandHandler.Singleton;
 
@@ -58,10 +52,10 @@ namespace PropertiesManager
                 if (args.Length == 0 || args[0] is not bool enabled) return "An unexpected error occured.";
 
                 Plugin.NukeEnabled = enabled;
-                return enabled ? "The property nuke has been activated!": "The property nuke has been disabled!";
+                return enabled ? "The property nuke has been activated!" : "The property nuke has been disabled!";
             }));
         }
+        void OnEnable() => HarmonyPatches.ApplyHarmonyPatches();
+        void OnDisable() => HarmonyPatches.RemoveHarmonyPatches();
     }
-
 }
-
